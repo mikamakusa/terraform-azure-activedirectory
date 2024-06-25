@@ -203,7 +203,9 @@ variable "application" {
         source                = optional(string)
       })), [])
     })), [])
-    public_client = optional(list(object({})), [])
+    public_client = optional(list(object({
+      redirect_uris = optional(list(string))
+    })), [])
     required_resource_access = optional(list(object({
       resource_app_id = string
       resource_access = list(object({
@@ -211,8 +213,18 @@ variable "application" {
         id   = string
       }))
     })), [])
-    single_page_application = optional(list(object({})), [])
-    web                     = optional(list(object({})), [])
+    single_page_application = optional(list(object({
+      redirect_uris = optional(list(string))
+    })), [])
+    web = optional(list(object({
+      homepage_url  = optional(string)
+      logout_url    = optional(string)
+      redirect_uris = optional(list(string))
+      implicit_grant = optional(list(object({
+        access_token_issuance_enabled = optional(bool)
+        id_token_issuance_enabled     = optional(bool)
+      })), [])
+    })), [])
   }))
   default = []
 }
@@ -244,7 +256,54 @@ variable "service_principal" {
 }
 
 variable "ad_domain_services" {
-  type = any
+  type = list(object({
+    id                        = number
+    domain_name               = string
+    location                  = number
+    name                      = string
+    resource_group_name       = number
+    sku                       = string
+    domain_configuration_type = optional(string)
+    filtered_sync_enabled     = optional(string)
+    initial_replica_set = optional(list(object({
+      subnet_id = string
+    })), [])
+    secure_ldap = optional(list(object({
+      enabled                  = bool
+      pfx_certificate          = string
+      pfx_certificate_password = string
+      external_access_enabled  = optional(bool)
+    })), [])
+    notifications = optional(list(object({
+      additional_recipients = optional(list(string))
+      notify_dc_admins      = optional(bool)
+      notify_global_admins  = optional(bool)
+    })), [])
+    security = optional(list(object({
+      kerberos_armoring_enabled       = optional(bool)
+      kerberos_rc4_encryption_enabled = optional(bool)
+      sync_kerberos_passwords         = optional(bool)
+      ntlm_v1_enabled                 = optional(bool)
+      sync_ntlm_passwords             = optional(bool)
+      sync_on_prem_passwords          = optional(bool)
+      tls_v1_enabled                  = optional(bool)
+    })), [])
+  }))
+  default = []
+}
+
+variable "domain_service_replica_set" {
+  type = list(object({
+    id = number
+  }))
+  default = []
+}
+
+variable "domain_service_trust" {
+  type = list(object({
+    id = number
+  }))
+  default = []
 }
 
 variable "secure_ldap" {}

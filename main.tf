@@ -21,20 +21,43 @@ resource "azurerm_active_directory_domain_service" "this" {
       enabled                  = true
       pfx_certificate          = ""
       pfx_certificate_password = ""
+      external_access_enabled  = true
     }
   }
 
   dynamic "notifications" {
     for_each = ""
     content {
-
+      additional_recipients = []
+      notify_dc_admins = true
+      notify_global_admins = true
     }
   }
 
   dynamic "security" {
     for_each = ""
     content {
-
+      kerberos_armoring_enabled = true
+      kerberos_rc4_encryption_enabled = true
+      sync_kerberos_passwords = true
+      ntlm_v1_enabled = true
+      sync_ntlm_passwords = true
+      sync_on_prem_passwords = true
+      tls_v1_enabled = true
     }
   }
+}
+
+resource "azurerm_active_directory_domain_service_replica_set" "this" {
+  domain_service_id = ""
+  location          = ""
+  subnet_id         = ""
+}
+
+resource "azurerm_active_directory_domain_service_trust" "this" {
+  domain_service_id      = ""
+  name                   = ""
+  password               = ""
+  trusted_domain_dns_ips = []
+  trusted_domain_fqdn    = ""
 }
