@@ -294,14 +294,22 @@ variable "ad_domain_services" {
 
 variable "domain_service_replica_set" {
   type = list(object({
-    id = number
+    id                = number
+    domain_service_id = number
+    resource_group_id = number
+    subnet_id         = number
   }))
   default = []
 }
 
 variable "domain_service_trust" {
   type = list(object({
-    id = number
+    id                     = number
+    domain_service_id      = number
+    name                   = string
+    password               = string
+    trusted_domain_dns_ips = list(string)
+    trusted_domain_fqdn    = string
   }))
   default = []
 }
