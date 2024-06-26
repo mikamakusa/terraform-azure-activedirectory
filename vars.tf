@@ -314,4 +314,18 @@ variable "domain_service_trust" {
   default = []
 }
 
-variable "secure_ldap" {}
+variable "virtual_network_peering" {
+  type = list(object({
+    id                           = number
+    name                         = string
+    remote_virtual_network_id    = number
+    resource_group_id            = number
+    virtual_network_id           = number
+    allow_forwarded_traffic      = optional(bool)
+    allow_gateway_transit        = optional(bool)
+    allow_virtual_network_access = optional(bool)
+    triggers                     = optional(map(string))
+    use_remote_gateways          = optional(bool)
+  }))
+  default = []
+}

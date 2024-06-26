@@ -47,3 +47,16 @@ resource "azurerm_subnet_network_security_group_association" "this" {
   network_security_group_id = try(element(azurerm_network_security_group.this.*.id, lookup(var.security_group_association[count.index], "network_security_group_id")))
   subnet_id                 = try(element(azurerm_subnet.this.*.id, lookup(var.security_group_association[count.index], "subnet_id")))
 }
+
+resource "azurerm_virtual_network_peering" "this" {
+  count                        = (length(var.virtual_network) && length(var.resource_group)) == 0 ? 0 : length(var.virtual_network_peering)
+  name                         = lookup(var.virtual_network_peering[count.index], "name")
+  remote_virtual_network_id    = try(element(azurerm_virtual_network.this.*.id, lookup(var.virtual_network_peering[count.index], "remote_virtual_network_id")))
+  resource_group_name          = try(element(azurerm_resource_group.this.*.name, lookup(var.virtual_network_peering[count.index], "resource_group_id")))
+  virtual_network_name         = try(element(azurerm_virtual_network.this.*.id, lookup(var.virtual_network_peering[count.index], "virtual_network_id")))
+  allow_forwarded_traffic      = lookup(var.virtual_network_peering[count.index], "allow_forwarded_traffic")
+  allow_gateway_transit        = lookup(var.virtual_network_peering[count.index], "allow_gateway_transit")
+  allow_virtual_network_access = lookup(var.virtual_network_peering[count.index], "allow_virtual_network_access")
+  triggers                     = lookup(var.virtual_network_peering[count.index], "triggers")
+  use_remote_gateways          = lookup(var.virtual_network_peering[count.index], "use_remote_gateways")
+}
